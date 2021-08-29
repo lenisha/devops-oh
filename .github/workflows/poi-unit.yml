@@ -22,9 +22,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
-    - name: Add Code Coverage Tools
-      working-directory: apis/poi/tests/UnitTests
-      run: dotnet add package coverlet.msbuild
+    #- name: Add Code Coverage Tools
+    #  working-directory: apis/poi/tests/UnitTests
+    #  run: dotnet add package coverlet.msbuild
 
     - name: Install dependencies
       run: dotnet restore apis/poi/web/*.csproj
@@ -36,6 +36,8 @@ jobs:
       run: dotnet build --configuration Release apis/poi/tests/UnitTests/UnitTests.csproj
 
     - name: .NET Test
-      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov
+      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  
+      
+      # /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov
       
 

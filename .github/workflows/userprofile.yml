@@ -1,11 +1,11 @@
-name: Trips CICD
+name: User Profile CI
 
 on:
   push:
     branches: [ master ]
     paths: 
-      - apis/trips/**  
-      - .github/workflows/trips.yml
+      - apis/userprofile/**  
+      - .github/workflows/userprofile*.yml
 
 jobs:
   build_and_test:
@@ -13,21 +13,17 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: apis/trips    
+        working-directory: apis/userprofile    
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Go environment
-      uses: actions/setup-go@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
       with:
-        go-version: 1.17
-
-    - name: Install dependencies
-      run: go get
-
-    - name: Run Unit Tests
-      run: go test ./tests
-
+        node-version: 10.x
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm run test
 
     - uses: actions/github-script@v4
       if: failure()
@@ -40,4 +36,4 @@ jobs:
             repo: context.repo.repo,
             title: "${{ github.workflow }} Workflow ${{ github.run_number }} Failed! ",
             body: body
-            })
+          });

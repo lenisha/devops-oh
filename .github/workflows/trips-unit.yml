@@ -5,12 +5,12 @@ on:
     branches-ignore: [ master ]
     paths: 
       - apis/trips/**  
-      - .github/workflows/trips.yml
+      - .github/workflows/trips*.yml
   pull_request:
     branches: [ master ]
     paths: 
       - apis/trips/**
-      - .github/workflows/trips.yml
+      - .github/workflows/trips*.yml
 
 jobs:
   build_and_test:

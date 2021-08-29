@@ -45,4 +45,4 @@ jobs:
         token: ${{secrets.GITHUB_TOKEN}}
         assignees: ${{github.actor}}
         labels: worflow-failed
-        body: Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} 
+        body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 

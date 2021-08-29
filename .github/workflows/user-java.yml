@@ -1,5 +1,4 @@
-name: User Java Unit Tests
-
+name: User Java CICD
 on:
   push:
     branches: [ master ]

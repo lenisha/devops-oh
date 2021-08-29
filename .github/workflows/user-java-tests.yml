@@ -2,10 +2,16 @@ name: User Java Unit Tests
 
 on:
   push:
+    branches-ignore: [ master ]
+    paths: 
+      - apis/user-java/**  
+      - .github/workflows/user-java*.yml
+  pull_request:
     branches: [ master ]
     paths: 
       - apis/user-java/**  
       - .github/workflows/user-java*.yml
+
 jobs:
   build_and_test:
     runs-on: ubuntu-latest

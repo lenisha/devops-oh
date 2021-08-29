@@ -36,8 +36,14 @@ jobs:
       run: dotnet build --configuration Release apis/poi/tests/UnitTests/UnitTests.csproj
 
     - name: .NET Test
-      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  
+      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  # /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov
       
-      # /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov
-      
-
+    - uses: nashmaniac/create-issue-action@v1.1
+      name: Create Issue Action
+      if: failure()
+      with:
+        title: Build Failed ${{ github.workflow }}
+        token: ${{secrets.GITHUB_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: worflow-failed ${{ github.workflow }}
+        body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 

@@ -5,12 +5,8 @@ on:
     branches: [ master ]
     paths: 
       - apis/poi/**  
-      - .github/workflows/poi.yml
-  pull_request:
-    branches: [ master ]
-    paths: 
-      - apis/poi/**
-      - .github/workflows/poi.yml
+      - .github/workflows/poi*.yml
+
 
 
 jobs:
@@ -33,3 +29,14 @@ jobs:
 
     - name: .NET Build Web
       run: dotnet build --configuration Release --no-restore apis/poi/web/*.csproj
+      
+    - uses: nashmaniac/create-issue-action@v1.1
+      name: Create Issue Action
+      if: failure()
+      with:
+        title: Build Failed ${{ github.workflow }}
+        token: ${{secrets.GITHUB_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: worflow-failed ${{ github.workflow }}
+        body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+  

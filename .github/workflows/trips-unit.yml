@@ -1,0 +1,49 @@
+name: Trips UnitTests
+
+on:
+  push:
+    branches-ignore: [ master ]
+    paths: 
+      - apis/trips/**  
+      - .github/workflows/trips*.yml
+  pull_request:
+    branches: [ master ]
+    paths: 
+      - apis/trips/**
+      - .github/workflows/trips*.yml
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: apis/trips    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+        
+
+    - name: Install dependencies
+      run: go get
+
+    - name: Run Unit Tests
+      run: go test ./tests
+
+    - uses: actions/github-script@v4
+      if: failure()
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          let body = "${{ github.workflow }} Worflow Failure \n Build Number: ${{ github.run_number }} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \n SHA: ${{ github.sha }}";
+          github.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: "${{ github.workflow }} Workflow ${{ github.run_number }} Failed! ",
+            body: body
+          })
+            

@@ -15,22 +15,21 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
-     
-    - name: Restore dependencies
+   
+    - name: Install dependencies
       run: dotnet restore apis/poi/web/*.csproj
-
       
-    - name: Build
-      run: dotnet build apis/poi/web/*.csproj
+    - name: .NET Build Unit Tests
+      run: dotnet build --configuration Release apis/poi/tests/UnitTests/UnitTests.csproj
 
-      
-    - name: Test
-      run: dotnet test --no-build --verbosity normal apis/poi/web/*.csproj
+    - name: .NET Test
+      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov
 
+    - name: .NET Build Web
+      run: dotnet build --configuration Release --no-restore apis/poi/web/*.csproj

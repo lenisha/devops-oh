@@ -42,8 +42,8 @@ jobs:
       name: Create Issue Action
       if: failure()
       with:
-        title: Build Failed
+        title: Build Failed ${{ github.workflow }}
         token: ${{secrets.GITHUB_TOKEN}}
         assignees: ${{github.actor}}
-        labels: worflow-failed
+        labels: worflow-failed ${{ github.workflow }}
         body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 

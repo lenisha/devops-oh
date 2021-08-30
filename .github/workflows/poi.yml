@@ -65,8 +65,7 @@ jobs:
         registry: docker.pkg.github.com
         repository: lenisha/devops-oh/api-poi
         tags: ${{github.run_number}}       
-        file: apis/poi/web/Dockerfile
-        context: apis/poi/web
+        path: apis/poi/web
         
    
         

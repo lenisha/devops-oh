@@ -75,9 +75,9 @@ jobs:
         build-args: |
           build_version=${{github.run_number}}
           
-        cache-from: type=registry,ref=lenisha/devops-oh/api-poi:${{github.run_number}}
-        cache-to: type=inline
-        tags: lenisha/devops-oh/api-poi:${{github.run_number}}
+        #cache-from: type=registry,ref=lenisha/devops-oh/api-poi:${{github.run_number}}
+        #cache-to: type=inline
+        tags: docker.pkg.github.com/lenisha/devops-oh/api-poi:${{github.run_number}}
         file: apis/poi/web/Dockerfile
         
     - uses: nashmaniac/create-issue-action@v1.1

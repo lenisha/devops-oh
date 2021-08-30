@@ -115,6 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [acr_build_and_push, docker_build_and_push]
     name: Deploy to Web App
+    environment: staging
     steps:     
     - name: Deploy Azure WebApp
       uses: Azure/webapps-deploy@v2

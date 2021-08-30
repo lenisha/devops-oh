@@ -5,12 +5,12 @@ on:
     branches-ignore: [ master ]
     paths: 
       - apis/poi/**  
-      - .github/workflows/poi*.yml
+      - .github/workflows/poi-unit.yml
   pull_request:
     branches: [ master ]
     paths: 
       - apis/poi/**
-      - .github/workflows/poi*.yml
+      - .github/workflows/poi-unit.yml
 
 
 jobs:

@@ -73,7 +73,7 @@ jobs:
         pull: true
         push: true
         build-args: |
-          build_version=${{github.run_number}
+          build_version=${{github.run_number}}
           
         cache-from: type=registry,ref=lenisha/devops-oh/api-poi:${{github.run_number}}
         cache-to: type=inline

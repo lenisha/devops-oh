@@ -9,15 +9,12 @@ on:
 
 env:
   poi_path: apis/poi/**
-  registry: docker.pkg.github.com
-  repository: lenisha/devops-oh/api-poi
-  docker_path: apis/poi/web
   staging_url: https://openhack3d68ldn3poi-staging.azurewebsites.net
   prod_url: https://openhack3d68ldn3poi.azurewebsites.net
   resource_group: openhack3d68ldn3rg
   webapp_name: openhack3d68ldn3poi
   build_name: POI
-  acr_registry: openhack3d68ldn3acr
+
 
 
 jobs:
@@ -65,12 +62,13 @@ jobs:
       with:
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
-        registry: $registry
-        repository: $repository
+        registry: docker.pkg.github.com
+        repository: lenisha/devops-oh/api-poi
         build-args: build_version=${{github.run_number}}
         tags: ${{github.run_number}}          
-        file: $docker_path
-        context: $docker_path
+        file: apis/poi/web/Dockerfile
+        context: apis/poi/web
+
         
     - uses: nashmaniac/create-issue-action@v1.1
       name: Create Issue Action
@@ -82,3 +80,49 @@ jobs:
         labels: worflow-failed ${{ github.workflow }}
         body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
 
+  acr_build_and_push:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    name: ACR Build, Tag, Push
+    steps:     
+    - uses: actions/checkout@v2
+
+    - name: Build container image
+      uses: docker/build-push-action@v2
+      with:
+        username: ${{secrets.ACR_USER}}
+        password: ${{secrets.ACR_PASSWORD}}
+        registry: openhack3d68ldn3acr.azurecr.io
+        repository: devopsoh/api-poi
+        build-args: build_version=${{github.run_number}}
+        tags: ${{github.run_number}}          
+        file: apis/poi/web/Dockerfile
+        context: apis/poi/web
+        
+    - uses: nashmaniac/create-issue-action@v1.1
+      name: Create Issue Action
+      if: failure()
+      with:
+        title: Docker Build Failed ${{ github.workflow }}
+        token: ${{secrets.GITHUB_TOKEN}}
+        assignees: ${{github.actor}}
+        labels: worflow-failed ${{ github.workflow }}
+        body: "Workflow failed for commit ${{github.sha}} \n Build Number: ${{github.run_number}} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+
+  deploy_webapp:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: [acr_build_and_push, docker_build_and_push]
+    name: Deploy to Web App
+    steps:     
+    - name: Deploy Azure WebApp
+      uses: Azure/webapps-deploy@v2
+      with:
+        app-name: ${{webapp_name}}
+        publish-profile: ${{secrets.POI_PROFILE}}
+        # Enter an existing Slot other than the Production slot
+        slot-name: staging
+        images: openhack3d68ldn3acr.azurecr.io/devopsoh/api-poi:${{github.run_number}}
+    
+    

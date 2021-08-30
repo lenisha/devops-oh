@@ -69,7 +69,9 @@ jobs:
         repository: $repository
         build-args: build_version=${{github.run_number}}
         tags: ${{github.run_number}}          
-
+        file: ${{ docker_path }}
+        context: ${{ docker_path }}
+        
     - uses: nashmaniac/create-issue-action@v1.1
       name: Create Issue Action
       if: failure()

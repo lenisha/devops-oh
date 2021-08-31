@@ -114,5 +114,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Web Validate 
-      run: ./polling.sh $staging_url 
-    
+      run: |
+        # make file runnable, might not be necessary
+        chmod +x ".github/workslows/polling-num.sh"
+
+        # run script
+        .github/workslows/polling-num.sh $staging_url 
+      

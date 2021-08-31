@@ -119,19 +119,18 @@ jobs:
     - name: Web Validate 
       run: |
         # make file runnable, might not be necessary
-        chmod +x ".github/workslows/polling-num.sh"
+        chmod +x "$GITHUB_WORKSPACE/.github/workflows/polling-num.sh"
 
         # run script
-        .github/workslows/polling-num.sh $staging_url 
+        $GITHUB_WORKSPACE/.github/workflows/polling-num.sh $staging_url 
       
   swap_staging_to_prod:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: validate_staging
-    name: Swap Staging to Prod
+    name: Deploy to Prod (swap)
     steps:
-    - uses: actions/checkout@v2
-
+    
     - name: 'Login via Azure CLI'
       uses: azure/login@v1
       with:
@@ -141,3 +140,22 @@ jobs:
       run: |
         az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
  
+  rollback_prod:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: swap_staging_to_prod
+    name: Rollback Deployment?
+    environment: 
+      name: production
+      url: ${{env.prod_url}}
+    steps:
+    - name: 'Login via Azure CLI'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Rollback production (swap slots)
+      run: |
+        az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot production --target-slot staging  
+ 
+

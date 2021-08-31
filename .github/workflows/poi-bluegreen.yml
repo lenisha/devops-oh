@@ -122,7 +122,7 @@ jobs:
         chmod +x "$GITHUB_WORKSPACE/.github/workflows/polling-num.sh"
 
         # run script
-        $GITHUB_WORKSPACE/.github/workflows/polling-num.sh $staging_url 
+        $GITHUB_WORKSPACE/.github/workflows/polling-num.sh -i $staging_url/api/healthcheck/poi 
       
   swap_staging_to_prod:
     if: github.ref == 'refs/heads/master'

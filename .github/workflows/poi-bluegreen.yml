@@ -141,10 +141,10 @@ jobs:
         az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production 
  
   rollback_prod:
-    if: github.ref == 'refs/heads/master'
+    if: failure()
     runs-on: ubuntu-latest
     needs: swap_staging_to_prod
-    name: Rollback Deployment?
+    name: Keep Deployment?
     environment: 
       name: production
       url: ${{env.prod_url}}

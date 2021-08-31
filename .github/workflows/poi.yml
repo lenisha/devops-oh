@@ -6,7 +6,7 @@ on:
     branches: [ master ]
     paths: 
       - apis/poi/**  
-      - .github/workflows/poi*.yml
+      - .github/workflows/poi.yml
 
 env:
   poi_path: apis/poi/**

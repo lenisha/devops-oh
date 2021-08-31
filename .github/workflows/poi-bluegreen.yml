@@ -156,6 +156,6 @@ jobs:
         
     - name: Rollback production (swap slots)
       run: |
-        az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot production --target-slot staging  
+        az webapp deployment slot swap --name $webapp_name --resource-group $resource_group --slot staging --target-slot production  
  
 

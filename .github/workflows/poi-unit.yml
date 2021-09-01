@@ -1,6 +1,7 @@
 name: POI-UnitTest
 
 on:
+  workflow-dispatch:
   push:
     branches-ignore: [ master ]
     paths: 
